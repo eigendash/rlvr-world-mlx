@@ -180,8 +180,13 @@ def train_rlvr(
     scheme: str = "binary",
     log_every: int = 25,
     log: Callable[[str], None] = print,
+    on_step: Callable[[int, WorldModel], None] | None = None,
 ) -> RLVRHistory:
-    """Post-train ``model`` in place with GRPO against decoded rewards."""
+    """Post-train ``model`` in place with GRPO against decoded rewards.
+
+    ``on_step(step, model)`` is called after every update, which the experiment
+    uses to record held-out metrics along the way.
+    """
     cfg = cfg or RLVRConfig()
     if not transitions:
         raise ValueError("no training transitions")
@@ -234,6 +239,8 @@ def train_rlvr(
             mx.eval(aux["kl"])
         optimizer.update(model, grads)
         mx.eval(model.parameters(), optimizer.state)
+        if on_step is not None:
+            on_step(step, model)
 
         reward_np = np.array(rewards.reshape(len(batch), group_size), dtype=np.float64)
         # Fraction of groups that carry any learning signal at all.

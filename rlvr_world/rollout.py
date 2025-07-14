@@ -14,13 +14,13 @@ drawn, so a rollout is always a decodable string.
 
 from __future__ import annotations
 
-from typing import Callable, Sequence
+from typing import Sequence
 
 import mlx.core as mx
 import numpy as np
 
 from .model import WorldModel
-from .tokenizer import SPECIALS, BOS, EOS, PAD, SEP, UNK, Tokenizer
+from .tokenizer import BOS, EOS, PAD, SEP, UNK, Tokenizer
 
 
 def forbidden_ids(tokenizer: Tokenizer) -> list[int]:
@@ -130,7 +130,6 @@ def group_rewards(
     references: Sequence[str],
     group_size: int,
     scheme: str,
-    log: Callable[[str], None] | None = None,
 ) -> mx.array:
     """Reward every rollout, ``(B * G,)``, with ``references`` repeated per group."""
     from .reward import score_texts
