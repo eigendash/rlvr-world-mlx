@@ -160,6 +160,20 @@ def score_rollouts(
     ]
 
 
+def score_texts(
+    predictions: Sequence[str],
+    references: Sequence[str],
+    scheme: str = "binary",
+) -> list[float]:
+    """Score already-decoded predictions against reference strings."""
+    if len(predictions) != len(references):
+        raise ValueError("predictions and references must have the same length")
+    return [
+        reward_from_text(pred, ref, scheme)
+        for pred, ref in zip(predictions, references)
+    ]
+
+
 def field_values() -> dict[str, tuple[str, ...]]:
     """The legal values of each state field, for tests and analysis."""
     return {"door": DOOR_VALUES, "lamp": LAMP_VALUES, "gem": GEM_VALUES}
