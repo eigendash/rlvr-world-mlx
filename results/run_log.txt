@@ -1,0 +1,129 @@
+RLVR-World: Training World Models with Reinforcement Learning (arXiv:2505.13934) -- toy reimplementation experiment
+device=Device(gpu, 0)  python=3.12.14  mlx=0.32.3
+note: MLX training is not bit-reproducible run to run on this machine, so every configuration is repeated over seeds and reported as mean +/- std
+
+world: 8x8 grid, 176 train / 44 held-out transitions
+  unchanged transitions 0.245; held-out destinations seen in train 1.000
+model: 277344 parameters, vocab 56, response length 18
+
+MLE training-length sensitivity (held-out, greedy decoding)
+   steps   exact_match   token_f1   tok_acc      nll
+     250    0.348 +/- 0.086      0.876     0.945    0.118
+     500    0.621 +/- 0.148      0.919     0.966    0.098
+    1000    0.705 +/- 0.114      0.933     0.970    0.092
+    2000    0.735 +/- 0.129      0.939     0.973    0.093
+
+main comparison: MLE 250 steps, then 300 RLVR steps
+-- seed 0
+  mle step     1  nll 4.5136
+  mle step   125  nll 0.1264
+  mle step   250  nll 0.0479
+   MLE only            exact-match 0.455  token-F1 0.903  token-acc 0.957  nll 0.100
+  rlvr step     1  loss -0.00000  reward 0.4062  kl 0.000e+00  groups-with-signal 0.75
+  rlvr step   100  loss +0.00004  reward 0.5156  kl 3.782e-02  groups-with-signal 0.50
+  rlvr step   200  loss +0.00004  reward 0.6875  kl 3.946e-02  groups-with-signal 0.25
+  rlvr step   300  loss +0.00002  reward 0.9531  kl 1.771e-02  groups-with-signal 0.25
+   MLE + RLVR (binary@1e-4     ) exact-match 0.705  token-F1 0.940  token-acc 0.973  nll 0.105   (train reward 0.953, groups with signal 0.44, kl 1.77e-02)
+  rlvr step     1  loss -0.00000  reward 0.4062  kl 0.000e+00  groups-with-signal 0.75
+  rlvr step   100  loss +0.00001  reward 0.4531  kl 1.377e-02  groups-with-signal 0.38
+  rlvr step   200  loss +0.00004  reward 0.6406  kl 3.757e-02  groups-with-signal 0.75
+  rlvr step   300  loss +0.00004  reward 0.8125  kl 4.422e-02  groups-with-signal 0.50
+   MLE + RLVR (binary@3e-5     ) exact-match 0.636  token-F1 0.929  token-acc 0.968  nll 0.101   (train reward 0.812, groups with signal 0.59, kl 4.42e-02)
+  rlvr step     1  loss -0.00000  reward 0.4062  kl 0.000e+00  groups-with-signal 0.75
+  rlvr step   100  loss +0.00095  reward 0.0000  kl 9.540e-01  groups-with-signal 0.00
+  rlvr step   200  loss +0.00063  reward 0.0156  kl 6.318e-01  groups-with-signal 0.12
+  rlvr step   300  loss +0.00021  reward 0.2188  kl 2.098e-01  groups-with-signal 0.12
+   MLE + RLVR (binary@3e-4     ) exact-match 0.182  token-F1 0.753  token-acc 0.896  nll 0.483   (train reward 0.219, groups with signal 0.25, kl 2.10e-01)
+  rlvr step     1  loss -0.00000  reward 0.8242  kl 0.000e+00  groups-with-signal 1.00
+  rlvr step   100  loss +0.00003  reward 0.9277  kl 3.019e-02  groups-with-signal 0.50
+  rlvr step   200  loss +0.00004  reward 0.9277  kl 3.989e-02  groups-with-signal 0.50
+  rlvr step   300  loss +0.00003  reward 0.9785  kl 2.844e-02  groups-with-signal 0.25
+   MLE + RLVR (token_f1@1e-4   ) exact-match 0.455  token-F1 0.909  token-acc 0.960  nll 0.203   (train reward 0.979, groups with signal 0.56, kl 2.84e-02)
+  rlvr step     1  loss -0.00000  reward 0.7563  kl 0.000e+00  groups-with-signal 1.00
+  rlvr step   100  loss +0.00002  reward 0.8938  kl 1.747e-02  groups-with-signal 0.50
+  rlvr step   200  loss +0.00005  reward 0.8688  kl 5.094e-02  groups-with-signal 0.62
+  rlvr step   300  loss +0.00000  reward 0.9688  kl 3.339e-03  groups-with-signal 0.25
+   MLE + RLVR (structural@1e-4 ) exact-match 0.614  token-F1 0.923  token-acc 0.966  nll 0.160   (train reward 0.969, groups with signal 0.59, kl 3.34e-03)
+   control (rl_coef=0)  weights unchanged: True; exact-match 0.455
+-- seed 1
+  mle step     1  nll 3.9202
+  mle step   125  nll 0.1397
+  mle step   250  nll 0.1112
+   MLE only            exact-match 0.250  token-F1 0.841  token-acc 0.929  nll 0.145
+  rlvr step     1  loss +0.00000  reward 0.2969  kl 0.000e+00  groups-with-signal 0.75
+  rlvr step   100  loss +0.00008  reward 0.6094  kl 7.998e-02  groups-with-signal 0.75
+  rlvr step   200  loss +0.00009  reward 0.7969  kl 8.743e-02  groups-with-signal 0.88
+  rlvr step   300  loss +0.00004  reward 0.8906  kl 4.129e-02  groups-with-signal 0.75
+   MLE + RLVR (binary@1e-4     ) exact-match 0.318  token-F1 0.861  token-acc 0.938  nll 0.260   (train reward 0.891, groups with signal 0.78, kl 4.13e-02)
+  rlvr step     1  loss +0.00000  reward 0.2969  kl 0.000e+00  groups-with-signal 0.75
+  rlvr step   100  loss +0.00006  reward 0.7188  kl 6.085e-02  groups-with-signal 0.62
+  rlvr step   200  loss +0.00005  reward 0.6094  kl 5.080e-02  groups-with-signal 0.38
+  rlvr step   300  loss +0.00013  reward 0.8281  kl 1.267e-01  groups-with-signal 0.75
+   MLE + RLVR (binary@3e-5     ) exact-match 0.364  token-F1 0.861  token-acc 0.943  nll 0.192   (train reward 0.828, groups with signal 0.62, kl 1.27e-01)
+  rlvr step     1  loss +0.00000  reward 0.2969  kl 0.000e+00  groups-with-signal 0.75
+  rlvr step   100  loss +0.00036  reward 0.0938  kl 3.647e-01  groups-with-signal 0.38
+  rlvr step   200  loss +0.00017  reward 0.1094  kl 1.685e-01  groups-with-signal 0.12
+  rlvr step   300  loss +0.00040  reward 0.0000  kl 4.031e-01  groups-with-signal 0.00
+   MLE + RLVR (binary@3e-4     ) exact-match 0.114  token-F1 0.724  token-acc 0.878  nll 0.500   (train reward 0.000, groups with signal 0.31, kl 4.03e-01)
+  rlvr step     1  loss -0.00000  reward 0.7754  kl 0.000e+00  groups-with-signal 1.00
+  rlvr step   100  loss +0.00008  reward 0.9062  kl 8.288e-02  groups-with-signal 0.50
+  rlvr step   200  loss +0.00005  reward 0.9121  kl 5.163e-02  groups-with-signal 0.50
+  rlvr step   300  loss +0.00004  reward 0.9707  kl 3.729e-02  groups-with-signal 0.50
+   MLE + RLVR (token_f1@1e-4   ) exact-match 0.295  token-F1 0.861  token-acc 0.938  nll 0.253   (train reward 0.971, groups with signal 0.62, kl 3.73e-02)
+  rlvr step     1  loss +0.00000  reward 0.6969  kl 0.000e+00  groups-with-signal 1.00
+  rlvr step   100  loss +0.00007  reward 0.8781  kl 7.182e-02  groups-with-signal 0.50
+  rlvr step   200  loss +0.00003  reward 0.8469  kl 2.748e-02  groups-with-signal 0.38
+  rlvr step   300  loss +0.00006  reward 0.9063  kl 5.908e-02  groups-with-signal 0.38
+   MLE + RLVR (structural@1e-4 ) exact-match 0.341  token-F1 0.869  token-acc 0.942  nll 0.247   (train reward 0.906, groups with signal 0.56, kl 5.91e-02)
+   control (rl_coef=0)  weights unchanged: True; exact-match 0.250
+-- seed 2
+  mle step     1  nll 4.1366
+  mle step   125  nll 0.1418
+  mle step   250  nll 0.0698
+   MLE only            exact-match 0.273  token-F1 0.866  token-acc 0.941  nll 0.124
+  rlvr step     1  loss -0.00000  reward 0.0781  kl 0.000e+00  groups-with-signal 0.62
+  rlvr step   100  loss +0.00009  reward 0.3281  kl 8.909e-02  groups-with-signal 0.50
+  rlvr step   200  loss +0.00010  reward 0.5781  kl 9.999e-02  groups-with-signal 0.25
+  rlvr step   300  loss +0.00002  reward 0.6875  kl 1.959e-02  groups-with-signal 0.38
+   MLE + RLVR (binary@1e-4     ) exact-match 0.409  token-F1 0.884  token-acc 0.948  nll 0.277   (train reward 0.688, groups with signal 0.44, kl 1.96e-02)
+  rlvr step     1  loss -0.00000  reward 0.0781  kl 0.000e+00  groups-with-signal 0.62
+  rlvr step   100  loss +0.00004  reward 0.3438  kl 3.689e-02  groups-with-signal 0.88
+  rlvr step   200  loss +0.00003  reward 0.4062  kl 3.079e-02  groups-with-signal 0.62
+  rlvr step   300  loss +0.00002  reward 0.5625  kl 2.096e-02  groups-with-signal 0.75
+   MLE + RLVR (binary@3e-5     ) exact-match 0.364  token-F1 0.884  token-acc 0.948  nll 0.176   (train reward 0.562, groups with signal 0.72, kl 2.10e-02)
+  rlvr step     1  loss -0.00000  reward 0.0781  kl 0.000e+00  groups-with-signal 0.62
+  rlvr step   100  loss +0.00148  reward 0.0000  kl 1.481e+00  groups-with-signal 0.00
+  rlvr step   200  loss +0.00095  reward 0.0000  kl 9.507e-01  groups-with-signal 0.00
+  rlvr step   300  loss +0.00079  reward 0.2031  kl 7.927e-01  groups-with-signal 0.38
+   MLE + RLVR (binary@3e-4     ) exact-match 0.068  token-F1 0.639  token-acc 0.822  nll 1.279   (train reward 0.203, groups with signal 0.25, kl 7.93e-01)
+  rlvr step     1  loss -0.00000  reward 0.7422  kl 0.000e+00  groups-with-signal 1.00
+  rlvr step   100  loss +0.00004  reward 0.8887  kl 3.770e-02  groups-with-signal 0.75
+  rlvr step   200  loss +0.00010  reward 0.9023  kl 1.044e-01  groups-with-signal 0.75
+  rlvr step   300  loss +0.00008  reward 0.9434  kl 7.794e-02  groups-with-signal 0.50
+   MLE + RLVR (token_f1@1e-4   ) exact-match 0.432  token-F1 0.889  token-acc 0.951  nll 0.242   (train reward 0.943, groups with signal 0.75, kl 7.79e-02)
+  rlvr step     1  loss -0.00000  reward 0.6156  kl 0.000e+00  groups-with-signal 1.00
+  rlvr step   100  loss +0.00005  reward 0.7750  kl 5.068e-02  groups-with-signal 0.88
+  rlvr step   200  loss +0.00004  reward 0.8844  kl 3.828e-02  groups-with-signal 0.50
+  rlvr step   300  loss +0.00002  reward 0.8969  kl 1.562e-02  groups-with-signal 0.25
+   MLE + RLVR (structural@1e-4 ) exact-match 0.432  token-F1 0.903  token-acc 0.957  nll 0.217   (train reward 0.897, groups with signal 0.66, kl 1.56e-02)
+   control (rl_coef=0)  weights unchanged: True; exact-match 0.273
+
+held-out results, mean +/- std over 3 seeds (44 held-out transitions)
+configuration             exact match       token F1 tok acc  sampled EM   NLL    
+----------------------------------------------------------------------------------
+MLE only                  0.326 +/- 0.112   0.870   0.942   0.227   0.123
+MLE + RLVR (binary@1e-4)  0.477 +/- 0.202   0.895   0.953   0.429   0.214
+MLE + RLVR (binary@3e-5)  0.455 +/- 0.157   0.891   0.953   0.405   0.156
+MLE + RLVR (binary@3e-4)  0.121 +/- 0.057   0.705   0.865   0.123   0.754
+MLE + RLVR (token_f1@1e-4)0.394 +/- 0.086   0.886   0.949   0.343   0.233
+MLE + RLVR (structural@1e-4)0.462 +/- 0.139   0.899   0.955   0.426   0.208
+control: rl_coef=0        0.326 +/- 0.112   0.870   0.942   0.227   0.123
+
+paired per-seed change in held-out exact match (RLVR - MLE)
+  binary@1e-4      +0.250  +0.068  +0.136   mean +0.152
+  binary@3e-5      +0.182  +0.114  +0.091   mean +0.129
+  binary@3e-4      -0.273  -0.136  -0.205   mean -0.205
+  token_f1@1e-4    +0.000  +0.045  +0.159   mean +0.068
+  structural@1e-4  +0.159  +0.091  +0.159   mean +0.136
+
+total wall clock 530 s
