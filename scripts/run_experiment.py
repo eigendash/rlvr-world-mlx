@@ -21,13 +21,17 @@ from __future__ import annotations
 import argparse
 import json
 import platform
+import sys
 import time
 from pathlib import Path
 from typing import Any
 
-import mlx.core as mx
-import numpy as np
-from mlx.utils import tree_flatten, tree_map
+# Run straight from a checkout, without installing the package.
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+import mlx.core as mx  # noqa: E402
+import numpy as np  # noqa: E402
+from mlx.utils import tree_flatten, tree_map  # noqa: E402
 
 from rlvr_world.grpo import RLVRConfig, train_rlvr
 from rlvr_world.mle import train_mle
